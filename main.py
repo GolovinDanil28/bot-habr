@@ -41,7 +41,6 @@ class BotConfig:
 
 
 class HabrParser:
-    """Парсер статей с Habr"""
     
     def __init__(self, config: BotConfig):
         self.config = config
