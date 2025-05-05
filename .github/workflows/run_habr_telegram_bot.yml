@@ -40,4 +40,4 @@ jobs:
 
       # Запуск бота
       - name: Run bot
-        run: python bot.py
+        run: python main.py
