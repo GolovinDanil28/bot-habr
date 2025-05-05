@@ -1,0 +1,43 @@
+name: Run Habr Telegram Bot
+
+on:
+  schedule:
+    - cron: '0 8 * * *' # Запуск каждый день в 8:00 UTC
+  push:
+    branches:
+      - main
+  workflow_dispatch: # Возможность ручного запуска
+
+jobs:
+  run-bot:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Клонирование репозитория
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Установка Python
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11' # Используем Python 3.11 для совместимости
+
+      # Установка зависимостей
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install python-telegram-bot==20.7 aiohttp beautifulsoup4 python-dotenv
+
+      # Создание .env файла с секретами
+      - name: Create .env file
+        env:
+          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+          CHAT_ID: ${{ secrets.CHAT_ID }}
+        run: |
+          echo "TELEGRAM_TOKEN=$TELEGRAM_TOKEN" > .env
+          echo "CHAT_ID=$CHAT_ID" >> .env
+
+      # Запуск бота
+      - name: Run bot
+        run: python bot.py
